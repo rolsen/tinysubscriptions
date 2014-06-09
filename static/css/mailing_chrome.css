@@ -6,3 +6,11 @@
     margin-top: 10px;
     height: 40px;
 }
+
+#selection-header {
+    min-width: 100px;
+}
+
+#list-name-header {
+    min-width: 140px;
+}

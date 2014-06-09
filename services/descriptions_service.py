@@ -62,9 +62,9 @@ class FakeCollection:
 
     def __init__(self):
         self.__contents = {
-            'List Name 0': 'description 0',
-            'List Name 1': 'description 1',
-            'List Name 2': 'description 2'
+            'List Name 0': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pharetra porttitor nisi, in accumsan elit vulputate non. Suspendisse consequat ac enim sit amet placerat. Quisque eleifend nunc metus, eu egestas ante aliquet quis. Morbi magna elit, viverra in pulvinar et, feugiat quis velit. Nam volutpat massa blandit lorem ornare ornare. Etiam adipiscing mi eu lectus mollis, ullamcorper vulputate magna mattis. Praesent sapien lectus, aliquet quis porttitor scelerisque, aliquam non nisi. Nunc sapien libero, tincidunt lobortis sapien quis, tincidunt lobortis lectus. Duis a convallis magna.',
+            'List Name 1': 'Pellentesque bibendum sem id accumsan consectetur. Pellentesque tincidunt rutrum lorem. Nam congue consequat turpis et aliquet. Suspendisse consequat, lacus non eleifend posuere, massa leo tempor eros, auctor tempus lacus lectus ut lectus. Phasellus lorem urna, faucibus et enim at, lacinia placerat nisl. Suspendisse ut purus eu dolor dignissim mattis. In metus diam, porta quis aliquet sed, sodales quis dui.',
+            'List Name 2': 'Aenean nec risus nunc. In non massa ut lectus viverra dignissim. Etiam ullamcorper metus a nibh posuere consectetur. Proin porttitor elementum purus, vel volutpat neque blandit a. Ut faucibus blandit varius. Aenean id volutpat leo. Nullam vestibulum tincidunt leo, a porta arcu elementum eget. Morbi eleifend urna at nisi tempus sodales. Integer iaculis lectus eget neque dignissim, id bibendum diam dapibus.'
         }
 
     def find_one(self):

@@ -102,14 +102,6 @@ class SubscriptionsControllerTests(mox.MoxTestBase):
         self.mox.StubOutWithMock(services.util, 'get_diff')
         self.mox.StubOutWithMock(services.subscriptions_service, 'subscribe')
         self.mox.StubOutWithMock(services.subscriptions_service, 'unsubscribe')
-        self.mox.StubOutWithMock(
-            services.descriptions_service,
-            'get_descriptions'
-        )
-        self.mox.StubOutWithMock(
-            services.util,
-            'merge_subscriptions_and_descriptions'
-        )
 
         services.subscriptions_service.get_user_subscriptions(TEST_EMAIL) \
             .AndReturn(TEST_SUBSCRIPTIONS)
@@ -120,13 +112,6 @@ class SubscriptionsControllerTests(mox.MoxTestBase):
         services.subscriptions_service.subscribe(TEST_EMAIL, TEST_NEW_SUBSCR)
         services.subscriptions_service.unsubscribe(TEST_EMAIL, TEST_DEL_SUBSCR)
 
-        services.descriptions_service.get_descriptions() \
-            .AndReturn(TEST_DESCRIPTIONS)
-        services.util.merge_subscriptions_and_descriptions(
-            TEST_NEW_LISTS,
-            TEST_DESCRIPTIONS
-        ).AndReturn(TEST_MERGED_LISTS)
-
         self.mox.ReplayAll()
 
         result = self.app.post(
@@ -134,9 +119,3 @@ class SubscriptionsControllerTests(mox.MoxTestBase):
             data=dict(subscriptions = json.dumps(TEST_NEW_LISTS))
         )
         self.assertEqual(200, result.status_code)
-        self.assertTrue('name0' in result.data)
-        self.assertTrue('description0' in result.data)
-        self.assertTrue('name1' in result.data)
-        self.assertTrue('description1' in result.data)
-        self.assertTrue('name2' in result.data)
-        self.assertTrue('description2' in result.data)

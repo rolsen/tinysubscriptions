@@ -62,17 +62,4 @@ def update_lists(email):
     services.subscriptions_service.subscribe(email, diff[POS_DIFF_KEY])
     services.subscriptions_service.unsubscribe(email, diff[NEG_DIFF_KEY])
 
-    descriptions = services.descriptions_service.get_descriptions()
-    subscriptions = services.util.merge_subscriptions_and_descriptions(
-        new_subscriptions,
-        descriptions
-    )
-
-    return flask.render_template(
-        'mailing_chrome.html',
-        base_url=services.util.get_app_config()['BASE_URL'],
-        app_title=APP_TITLE,
-        email=email,
-        lists=subscriptions,
-        update_status='success'
-    )
+    return 'success', 200

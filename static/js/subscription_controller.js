@@ -3,7 +3,7 @@
  */
 var subscription_controller = {
 
-    button: '#subscriptions-update-button',
+    save_button: '#subscriptions-update-button',
 
     view_target: '#subscription-update-containter',
 
@@ -96,7 +96,7 @@ var subscription_controller = {
     },
 
     listen: function () {
-        $(this.button).on('click', this.create_update_subscriptions());
+        $(this.save_button).on('click', this.create_update_subscriptions());
         $(this.select_all_toggle_el).on('change', this.create_toggle_all_is_subscribed());
     }
 };
