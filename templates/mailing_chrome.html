@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="/static/css/mailing_chrome.css">
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" language="javascript" src="/static/js/subscription_controller.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-xs-12">
+        <p>{{ email }} subscriptions:</p>
+    </div>
+</div>
+<div class="row">
+    <div id="subscription-update-containter" class="col-xs-12">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Subscribed</th>
+                    <th>List Name</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for list_name, list in lists.iteritems()|sort %}
+                <tr class="list-object">
+                    <td>
+                        <input type="checkbox" class="list-is-subscribed" value="subscribed" {% if list.subscribed %}checked{% endif %}>
+                    </td>
+                    <td>
+                        {{ list_name }}
+                        <input type="text" class="hidden list-name" value="{{ list_name }}" readonly>
+                    </td>
+                    <td>
+                        {{ list.description }}
+                        <input type="text" class="hidden list-description" value="{{ list.description }}" readonly>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3">
+                        <input type="checkbox" id="is-subscribed-select-all" name="is-subscribed-select-all">
+                        <label for="is-subscribed-select-all" id="select-all-toggle-text">Select All</th>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+        <button id="subscriptions-update-button" class="btn btn-default">Save</button>
+        <div class="row">
+            <div id="update-status-container" class="col-xs-12">
+                <p id="update-message"></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

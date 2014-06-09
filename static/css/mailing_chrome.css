@@ -1,0 +1,8 @@
+.hidden {
+    display: none;
+}
+
+#update-status-container {
+    margin-top: 10px;
+    height: 40px;
+}

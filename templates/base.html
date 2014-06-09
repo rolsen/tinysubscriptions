@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{{ app_title }}</title>
+        <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="/static/css/base.css">
+        {% block styles %}{% endblock %}
+    </head>
+    <body>
+        <div id="content-area" class="container-fluid">
+            <div id="confirmation-message-display"></div>
+            <div id="header-bar">
+                <div class="row">
+                    <div class="col-md-12" id="product-id"><h1>{{ app_title }}</h1></div>
+                </div>
+            </div>
+            {% block content %}{% endblock %}
+        </div>
+
+        <script src="/static/js/lib/jquery-1.11.0.min.js"></script>
+        <script src="/static/js/lib/bootstrap.min.js"></script>
+        {% block scripts %}{% endblock %}
+
+    </body>
+</html>

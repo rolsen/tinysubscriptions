@@ -1,0 +1,6 @@
+Flask==0.10.1
+Flask-PyMongo==0.3.0
+Flask-SSLify==0.1.4
+mox==0.5.3
+sendgrid==0.1.4
+Werkzeug==0.9.4
