@@ -22,12 +22,31 @@ class FakeSendGrid:
         return cls.__contents
 
     @classmethod
+    def get_lists(cls):
+        return cls.__contents
+
+    @classmethod
     def subscribe(cls, email, new_subscriptions):
         print "FakeSendGrid.subscribe"
 
     @classmethod
     def unsubscribe(cls, email, cancel_subscriptions):
         print "FakeSendGrid.unsubscribe"
+
+
+def get_lists():
+    """Get all lists that are available for subscription.
+
+    @return: Array of mailing lists.
+    @rtype: iterable over str
+    """
+    if util.get_app_config()['FAKE_SENDGRID']:
+        return FakeSendGrid.get_lists()
+
+    print "get_lists stub"
+    return [
+        'subscriptions_service.get_lists stub'
+    ]
 
 
 def get_user_subscriptions(email):
@@ -39,21 +58,13 @@ def get_user_subscriptions(email):
 
     @param email: The user email for which to return list subscriptions.
     @type email: str
-    @return: Dict of the form: {
-        'listname 0':'description 0',
-        'listname 1':'description 1',
-        ...
-    }
-    @rtype: iterable over lists
+    @return: Array of mailing lists
+    @rtype: iterable over str
     """
     if util.get_app_config()['FAKE_SENDGRID']:
         return FakeSendGrid.get_subscriptions(email)
 
     print "get_user_subscriptions stub"
-    # https://api.sendgrid.com/api/unsubscribes.get.json
-    # ?api_user=your_sendgrid_username
-    # &api_key=your_sendgrid_password
-    # &email={{ email }}
     return [
         'subscriptions_service.get_user_subscriptions stub'
     ]

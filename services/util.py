@@ -16,7 +16,8 @@ def merge_subscriptions_and_descriptions(subscriptions, descriptions):
     @param subscriptions: A list of subscriptions list names
     @type subscriptions: iterable over list names
     @param descriptions: A dict of subscriptions of the form: {
-        'listname': 'listdescription'
+        'listname': {'description': 'listdescription'},
+        ...
     }
     @type subscriptions: iterable over list name and description.
     @return: A dict of dicts, each dict is of the form: {
@@ -28,9 +29,9 @@ def merge_subscriptions_and_descriptions(subscriptions, descriptions):
     @rtype: iterable over dicts
     """
     results = {}
-    for name, description in descriptions.iteritems():
+    for name, item in descriptions.iteritems():
         results[name] = {
-            'description': description,
+            'description': item['description'],
             'subscribed': name in subscriptions
         }
     return results

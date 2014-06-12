@@ -20,9 +20,9 @@ TEST_SUBSCRIPTIONS = [
 ]
 
 TEST_DESCRIPTIONS = {
-    'name0': 'description0',
-    'name1': 'description1',
-    'name2': 'description2'
+    'name0': {'description': 'description0'},
+    'name1': {'description': 'description1'},
+    'name2': {'description': 'description2'}
 }
 
 TEST_LISTS = {

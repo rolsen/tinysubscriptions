@@ -1,16 +1,52 @@
 {% extends "base.html" %}
 
 {% block styles %}
-<link rel="stylesheet" type="text/css" href="/static/css/mailing_chrome.css">
+<link rel="stylesheet" type="text/css" href="/static/css/admin_chrome.css">
 {% endblock %}
 
 {% block scripts %}
+<script type="text/javascript" language="javascript" src="/static/js/description_controller.js"></script>
 {% endblock %}
 
 {% block content %}
 <div class="row">
-    <div class="col-xs-12">
-        mailing_chrome test
+    <div id="subscription-update-containter" class="col-xs-12">
+        <div class="row">
+            <div class="col-xs-2">
+                <th id="selection-header">Manage this list</th>
+            </div>
+            <div class="col-xs-2">
+                <th id="list-name-header">List Name</th>
+            </div>
+            <div class="col-xs-8">
+                <th>Description</th>
+            </div>
+        </div>
+        {% for list in lists|sort(attribute='name') %}
+        <div class="row list-object">
+            <div class="col-xs-2">
+                <input type="checkbox" class="list-is-selected" {% if list.is_managed %}checked{% endif %}>
+            </div>
+            <div class="col-xs-2">
+                <input type="text" class="form-control list-name" value="{{ list.name }}" readonly>
+            </div>
+            <div class="col-xs-8">
+                <textarea class="form-control list-description" rows="5">{{ list.description }}</textarea>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="row">
+            <div class="col-xs-12">
+                <input type="checkbox" id="is-selected-select-all" name="is-selected-select-all">
+                <label for="is-selected-select-all" id="select-all-toggle-text">Select All
+            </div>
+        </div>
+        <button id="subscriptions-update-button" class="btn btn-default">Save</button>
+        <div class="row">
+            <div id="update-status-container" class="col-xs-12">
+                <p id="update-message"></p>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

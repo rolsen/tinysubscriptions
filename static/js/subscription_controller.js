@@ -1,4 +1,4 @@
-/*
+/**
  * Controller for collecting subscription data from the view and posting it.
  */
 var subscription_controller = {
