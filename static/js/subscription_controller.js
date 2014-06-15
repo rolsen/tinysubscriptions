@@ -31,6 +31,10 @@ var subscription_controller = {
         return function () {
             var subscriptions = $(self.view_target).find(self.subscription_el);
             var update_data = {};
+
+            $(self.save_button).hide();
+            $('#ajax-loader').show();
+
             $.each(subscriptions, function (index, subscription) {
                 var name = $(subscription).find(self.name_el).val();
                 var is_subscribed = $(subscription).find(self.is_subscribed_el).is(':checked');
@@ -62,6 +66,9 @@ var subscription_controller = {
     create_notify: function (message) {
         var self = this;
         return function () {
+            $('#ajax-loader').hide();
+            $(self.save_button).show();
+
             $(self.update_message_el).text(message);
             $(self.update_status_el)
                 .stop(true) // Clear any queued previous animation
@@ -98,6 +105,7 @@ var subscription_controller = {
     listen: function () {
         $(this.save_button).on('click', this.create_update_subscriptions());
         $(this.select_all_toggle_el).on('change', this.create_toggle_all_is_subscribed());
+        $('#ajax-loader').hide();
     }
 };
 

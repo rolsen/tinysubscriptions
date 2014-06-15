@@ -53,13 +53,21 @@ def get_lists(email):
 
 def update_lists(email):
     """Updates the user list subscriptions."""
-    old_subscriptions = services.subscriptions_service.get_user_subscriptions(
-        email
-    )
+    subscrip_service = services.subscriptions_service
+
+    old_subscriptions = subscrip_service.get_user_subscriptions(email)
     new_subscriptions = json.loads(flask.request.form.get('subscriptions'))
 
     diff = services.util.get_diff(old_subscriptions, new_subscriptions)
-    services.subscriptions_service.subscribe(email, diff[POS_DIFF_KEY])
-    services.subscriptions_service.unsubscribe(email, diff[NEG_DIFF_KEY])
+
+    if len(diff[POS_DIFF_KEY]) > 0:
+        response = subscrip_service.subscribe(email, diff[POS_DIFF_KEY])
+        if response.status_code != 200:
+            return response.text, response.status_code
+
+    if len(diff[NEG_DIFF_KEY]) > 0:
+        response = subscrip_service.unsubscribe(email, diff[NEG_DIFF_KEY])
+        if response.status_code != 200:
+            return response.text, response.status_code
 
     return 'success', 200

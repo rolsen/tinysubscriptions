@@ -4,6 +4,7 @@
 """
 from flask.ext.pymongo import PyMongo
 
+import subscriptions_service
 import util
 
 
@@ -30,7 +31,22 @@ def update_descriptions(new_descriptions):
     }
     @type new_descriptions: iterable over list descriptions.
     """
-    return get_db().subscriptions.save(new_descriptions)
+    old_record = get_descriptions()
+    the_id = old_record.get('_id', None)
+    if the_id:
+        new_descriptions['_id'] = the_id
+    descriptions = dict(
+        map(
+            lambda (k, v): (k.replace('.', '_dot_'), v),
+            new_descriptions.items()
+        )
+    )
+    get_db().subscriptions.save(descriptions)
+
+    util.get_redis_connection().flushall()
+
+    # get_user_subscriptions updates the cache
+    subscriptions_service.get_user_subscriptions('test@example.com')
 
 
 class AppMongoKeeper:

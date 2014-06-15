@@ -37,6 +37,10 @@ var description_controller = {
         return function () {
             var items = $(self.view_target).find(self.subscription_el);
             var update_data = {};
+
+            $(self.save_button).hide();
+            $('#ajax-loader').show();
+
             $.each(items, function (index, item) {
                 var name = $(item).find(self.name_el).val();
                 var is_selected = $(item).find(self.is_managed_el).is(
@@ -76,6 +80,9 @@ var description_controller = {
     create_notify: function (message) {
         var self = this;
         return function () {
+            $('#ajax-loader').hide();
+            $(self.save_button).show();
+
             $(self.update_message_el).text(message);
             $(self.update_status_el)
                 .stop(true) // Clear any queued previous animation
@@ -115,6 +122,7 @@ var description_controller = {
             'change',
             this.create_toggle_all_is_selected()
         );
+        $('#ajax-loader').hide();
     }
 };
 

@@ -14,11 +14,12 @@ import json
 import controllers
 import services
 
+
 # Initialize
 app = flask.Flask(__name__)
 
 # Load configuration settings
-app.config.from_pyfile('flask_config.cfg', silent=False)
+app.config.update(services.config_layer.get_config())
 
 # Create singleton for access
 services.util.AppConfigKeeper.create_instance(app.config)
@@ -40,6 +41,6 @@ if __name__ == '__main__':
 
     if not app.config['FAKE_MONGO']:
         mongo = PyMongo(app)
-        services.util.AppMongoKeeper.create_instance(mongo)
+        services.descriptions_service.AppMongoKeeper.create_instance(mongo)
 
     app.run()

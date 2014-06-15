@@ -14,3 +14,7 @@
 #list-name-header {
     min-width: 140px;
 }
+
+#is-selected-select-all-container {
+    margin-bottom: 30px;
+}

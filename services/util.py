@@ -1,4 +1,8 @@
 """Utilities functions for the application."""
+import redis
+import json
+
+import config_layer
 
 POS_DIFF_KEY = 'POS'
 NEG_DIFF_KEY = 'NEG'
@@ -29,9 +33,15 @@ def merge_subscriptions_and_descriptions(subscriptions, descriptions):
     @rtype: iterable over dicts
     """
     results = {}
+    if not descriptions:
+        return results
+
     for name, item in descriptions.iteritems():
+        if name == '_id':
+            continue
+
         results[name] = {
-            'description': item['description'],
+            'description': item.get('description', ''),
             'subscribed': name in subscriptions
         }
     return results
@@ -126,3 +136,86 @@ def get_app_config():
     @type: flask.Config
     """
     return AppConfigKeeper.get_instance().get_app_config()
+
+
+class AppRedisKeeper:
+    """Singleton for providing global access to the app's Redis connection."""
+
+    __instance = None
+
+    @classmethod
+    def get_instance(cls):
+        if cls.__instance == None:
+            cls.__instance = AppRedisKeeper()
+        return cls.__instance
+
+    def __init__(self):
+        config_settings = config_layer.get_config()
+
+        host = config_settings['REDIS_HOST']
+        port = config_settings['REDIS_PORT']
+        db = config_settings['REDIS_DB']
+        password = config_settings['REDIS_PASSWORD']
+        expiration = config_settings['REDIS_EXPIRATION']
+
+        self.redis_conn = redis.Redis(
+            host=host,
+            port=port,
+            db=db,
+            password=password
+        )
+
+
+def get_redis_connection():
+    """Get the Redis cache connection.
+
+    @return: The Redis connection
+    @rtype: redis.Redis
+    """
+    return AppRedisKeeper.get_instance().redis_conn
+
+
+def args_to_str(*args):
+    return ','.join(map(str, args))
+
+
+def get_redis_key(func, *args):
+    func_str = func
+    if not isinstance(func, basestring):
+        func_str = func.__name__
+
+    return func_str + args_to_str(args).replace('.', '_dot_')
+
+
+def redis_cached(cache_miss_func):
+    """Decorator that caches a function + parameters to a Redis instance.
+    """
+    config_settings = config_layer.get_config()
+    expiration = config_settings['REDIS_EXPIRATION']
+
+    def inner(*args, **kwargs):
+        key = get_redis_key(cache_miss_func, args)
+
+        redis_conn = get_redis_connection()
+        prior = redis_conn.get(key)
+
+        if not prior:
+            ret_val = cache_miss_func(*args, **kwargs)
+            redis_conn.setex(key, json.dumps(ret_val), expiration)
+            print 'set ' + key
+        else:
+            ret_val = json.loads(prior)
+
+        return ret_val
+
+
+    def inner_guarded(*args, **kwargs):
+        try:
+            # Try to connect to the redis cache and get cached value
+            return inner(*args, **kwargs)
+        except Exception as e:
+            # If failed to connect to redis cache
+            print 'cache fail -', e
+            return cache_miss_func(*args, **kwargs)
+
+    return inner_guarded
