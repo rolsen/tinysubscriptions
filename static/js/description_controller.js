@@ -1,7 +1,7 @@
 /**
  * Controller for collecting subscription data from the view and posting it.
  */
-var subscription_controller = {
+var description_controller = {
 
     save_button: '#subscriptions-update-button',
 
@@ -11,34 +11,50 @@ var subscription_controller = {
 
     name_el: '.list-name',
 
-    is_subscribed_el: '.list-is-subscribed',
+    is_managed_el: '.list-is-selected',
+
+    description_el: '.list-description',
 
     update_status_el: '#update-status-container',
 
     update_message_el: '#update-message',
 
-    select_all_toggle_el: "#is-subscribed-select-all",
+    select_all_toggle_el: "#is-selected-select-all",
 
     select_all_text_el: "#select-all-toggle-text",
 
     next_select_all_state: true,
 
+    UPDATE_SUCCESS: 'Update successful',
+
+    UPDATE_FAILURE: 'Update failed',
+
     /**
-     * Create a closure function that will save the DOM subscriptions.
+     * Create a closure function that will save the DOM description items.
      */
-    create_update_subscriptions: function () {
+    create_update_items: function () {
         var self = this;
         return function () {
-            var subscriptions = $(self.view_target).find(self.subscription_el);
+            var items = $(self.view_target).find(self.subscription_el);
             var update_data = {};
 
             $(self.save_button).hide();
             $('#ajax-loader').show();
 
-            $.each(subscriptions, function (index, subscription) {
-                var name = $(subscription).find(self.name_el).val();
-                var is_subscribed = $(subscription).find(self.is_subscribed_el).is(':checked');
-                update_data[name] = {'subscribed': is_subscribed};
+            $.each(items, function (index, item) {
+                var name = $(item).find(self.name_el).val();
+                var is_selected = $(item).find(self.is_managed_el).is(
+                    ':checked'
+                );
+                var description = $(item).find(self.description_el).val();
+                if (is_selected) {
+                    update_data[name] = {
+                        'description': description
+                    };
+                }
+                else {
+                    $(item).find(self.description_el).val("");
+                }
             });
 
             self.post_data(self, update_data);
@@ -47,16 +63,14 @@ var subscription_controller = {
 
     /**
      * Post data to the server and notify the user of success/failure.
-     * @param {obj} subscription_data The data to be posted to the server.
+     * @param {Object} self The description_controller instance representing
+     *     the object to update with success/failure.
+     * @param {Object} update_data The data to be posted to the server.
      */
-    post_data: function (self, subscription_data) {
-        var data = {'subscriptions': JSON.stringify(subscription_data)};
-        $.post('', data=data, success=self.create_notify('Subscription update successful'))
-            .fail(self.create_notify('Subscription update failed.'))
-            .fail(function(xhr, textStatus, errorThrown) {
-                console.log('xhr.responseText');
-                console.log(xhr.responseText);
-            });
+    post_data: function (self, update_data) {
+        var data = {'descriptions': JSON.stringify(update_data)};
+        $.post('', data=data, success=self.create_notify(self.UPDATE_SUCCESS))
+            .fail(self.create_notify(self.UPDATE_FAILURE));
     },
 
     /**
@@ -83,11 +97,11 @@ var subscription_controller = {
     /**
      * Create a closure function that will select all or deselect all subscriptions.
      */
-    create_toggle_all_is_subscribed: function () {
+    create_toggle_all_is_selected: function () {
         var self = this;
         return function () {
-            var is_subscribed_all = $(self.view_target).find(self.is_subscribed_el);
-            is_subscribed_all.prop('checked', self.next_select_all_state);
+            var is_selected_all = $(self.view_target).find(self.is_managed_el);
+            is_selected_all.prop('checked', self.next_select_all_state);
             self.next_select_all_state = !self.next_select_all_state;
             self.update_select_all_text(self);
         };
@@ -103,13 +117,16 @@ var subscription_controller = {
     },
 
     listen: function () {
-        $(this.save_button).on('click', this.create_update_subscriptions());
-        $(this.select_all_toggle_el).on('change', this.create_toggle_all_is_subscribed());
+        $(this.save_button).on('click', this.create_update_items());
+        $(this.select_all_toggle_el).on(
+            'change',
+            this.create_toggle_all_is_selected()
+        );
         $('#ajax-loader').hide();
     }
 };
 
 $(function() {
-    subscription_controller.update_select_all_text(this);
-    subscription_controller.listen();
+    description_controller.update_select_all_text(this);
+    description_controller.listen();
 });

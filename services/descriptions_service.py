@@ -4,6 +4,7 @@
 """
 from flask.ext.pymongo import PyMongo
 
+import subscriptions_service
 import util
 
 
@@ -11,8 +12,8 @@ def get_descriptions():
     """Get the list descriptions for the application.
 
     @return: Dict of the form: {
-        'listname 0':'description 0',
-        'listname 1':'description 1',
+        'listname 0': {'description': 'description text 0 ...'},
+        'listname 1': {'description': 'description text 1 ...'},
         ...
     }
     @rtype: iterable over str
@@ -24,13 +25,28 @@ def update_descriptions(new_descriptions):
     """Upserts the list descriptions for the application.
 
     @param new_descriptions: The new list descriptions to set, of the form: {
-        'listname 0': 'description 0',
-        'listname 1': 'description 1',
+        'listname 0': {'description': 'description text 0 ...'},
+        'listname 1': {'description': 'description text 1 ...'},
         ...
     }
     @type new_descriptions: iterable over list descriptions.
     """
-    return get_db().subscriptions.save()
+    old_record = get_descriptions()
+    the_id = old_record.get('_id', None)
+    if the_id:
+        new_descriptions['_id'] = the_id
+    descriptions = dict(
+        map(
+            lambda (k, v): (k.replace('.', '_dot_'), v),
+            new_descriptions.items()
+        )
+    )
+    get_db().subscriptions.save(descriptions)
+
+    util.get_redis_connection().flushall()
+
+    # get_user_subscriptions updates the cache
+    subscriptions_service.get_user_subscriptions('test@example.com')
 
 
 class AppMongoKeeper:
@@ -62,9 +78,9 @@ class FakeCollection:
 
     def __init__(self):
         self.__contents = {
-            'List Name 0': 'description 0',
-            'List Name 1': 'description 1',
-            'List Name 2': 'description 2'
+            'List Name 0': {'description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pharetra porttitor nisi, in accumsan elit vulputate non. Suspendisse consequat ac enim sit amet placerat. Quisque eleifend nunc metus, eu egestas ante aliquet quis. Morbi magna elit, viverra in pulvinar et, feugiat quis velit. Nam volutpat massa blandit lorem ornare ornare. Etiam adipiscing mi eu lectus mollis, ullamcorper vulputate magna mattis. Praesent sapien lectus, aliquet quis porttitor scelerisque, aliquam non nisi. Nunc sapien libero, tincidunt lobortis sapien quis, tincidunt lobortis lectus. Duis a convallis magna.'},
+            'List Name 1': {'description': 'Pellentesque bibendum sem id accumsan consectetur. Pellentesque tincidunt rutrum lorem. Nam congue consequat turpis et aliquet. Suspendisse consequat, lacus non eleifend posuere, massa leo tempor eros, auctor tempus lacus lectus ut lectus. Phasellus lorem urna, faucibus et enim at, lacinia placerat nisl. Suspendisse ut purus eu dolor dignissim mattis. In metus diam, porta quis aliquet sed, sodales quis dui.'},
+            'List Name 2': {'description': 'Aenean nec risus nunc. In non massa ut lectus viverra dignissim. Etiam ullamcorper metus a nibh posuere consectetur. Proin porttitor elementum purus, vel volutpat neque blandit a. Ut faucibus blandit varius. Aenean id volutpat leo. Nullam vestibulum tincidunt leo, a porta arcu elementum eget. Morbi eleifend urna at nisi tempus sodales. Integer iaculis lectus eget neque dignissim, id bibendum diam dapibus.'}
         }
 
     def find_one(self):
@@ -75,8 +91,18 @@ class FakeCollection:
 
 
 class FakeMongoDB:
+    """Test object to imitate a Mongo db. Persists until server restart."""
 
-    subscriptions = FakeCollection()
+    __instance = None
+
+    @classmethod
+    def get_instance(cls):
+        if cls.__instance == None:
+            cls.__instance = FakeMongoDB()
+        return cls.__instance
+
+    def __init__(self):
+        self.subscriptions = FakeCollection()
 
 
 def get_db():
@@ -86,6 +112,6 @@ def get_db():
     @type: flask_pymongo.wrappers.Database
     """
     if util.get_app_config()['FAKE_MONGO']:
-        return FakeMongoDB()
+        return FakeMongoDB.get_instance()
 
     return AppMongoKeeper.get_instance().get_mongo().db
