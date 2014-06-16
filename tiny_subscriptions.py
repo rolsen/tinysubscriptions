@@ -15,28 +15,29 @@ import controllers
 import services
 
 
-# Initialize
-app = flask.Flask(__name__)
-
-# Load configuration settings
-app.config.update(services.config_layer.get_config())
-
-# Create singleton for access
-services.util.AppConfigKeeper.create_instance(app.config)
-
-def attach_blueprints():
-    app.register_blueprint(
+def attach_blueprints(target_app):
+    target_app.register_blueprint(
         controllers.descriptions_controller.blueprint,
         url_prefix='/mailing'
     )
-    app.register_blueprint(
+    target_app.register_blueprint(
         controllers.subscriptions_controller.blueprint,
         url_prefix='/mailing'
     )
 
-attach_blueprints()
 
 if __name__ == '__main__':
+    # Initialize
+    app = flask.Flask(__name__)
+    
+    # Load configuration settings
+    app.config.update(services.config_layer.get_config())
+    
+    # Create singleton for access
+    services.util.AppConfigKeeper.create_instance(app.config)
+
+    attach_blueprints(app)
+
     app.config['DEBUG'] = True
 
     if not app.config['FAKE_MONGO']:
