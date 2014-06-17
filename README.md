@@ -69,3 +69,19 @@ Due to the potential for mutliple deployment and client-driven modification outs
  - All code checked in (via Gleap) to master or a version release branch should go through code review.
  - Code produced during pair programming or for initial project bootstrapping does not require code review. However, the results of pair programming should still go through a pull request.
  - Engineers can perform a code review for themselves if another engineer is not available within one working day.
+
+
+Configuration Settings
+----------------------
+The application configuration settings are maintained by Flask. The configuration values (held in flask_config.json) should include:
+
+ - REDIS_HOST: The URI where the application redis instance can be accessed.
+ - REDIS_PORT: The port where the application redis instance should be accessed.
+ - REDIS_DB: The integer ID of the database to use.
+ - REDIS_PASSWORD: The password to use to authenticate with the redis service.
+ - REDIS_EXPIRATION: The number of seconds that data cached in the redis service should be saved there before being marked invalid.
+ - FAKE_MONGO: Boolean indicating if a mongo database should be emulated.
+ - BASE_URL: The URL where this module is running out of.
+ - SENDGRID_API_USERNAME: The username to use to authenticate with the transactional email service.
+ - SENDGRID_API_KEY: The API key (password) to use to authenticate with the transactional email service.
+ - FAKE_SENDGRID: Boolean indicating if the sendgrid service should be emulated.
