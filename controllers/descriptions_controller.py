@@ -21,6 +21,9 @@ def get_lists():
     descriptions = services.descriptions_service.get_descriptions()
     subscriptions = services.subscriptions_service.get_lists()
 
+    if not descriptions:
+        descriptions = {}
+
     lists = []
     for listname in subscriptions:
         description_item = descriptions.get(listname, None)
