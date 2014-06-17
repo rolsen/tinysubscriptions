@@ -1,7 +1,10 @@
 import json
 
-with open('flask_config.json', 'r') as f:
-    CONFIG_VALUES = json.loads(f.read())
+try:
+    with open('flask_config.json', 'r') as f:
+        CONFIG_VALUES = json.loads(f.read())
+except IOError:
+    CONFIG_VALUES = {}
 
 
 def inject_config(config_values):
