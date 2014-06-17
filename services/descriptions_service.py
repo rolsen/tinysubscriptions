@@ -118,4 +118,4 @@ def get_db():
     if util.get_app_config()['FAKE_MONGO']:
         return FakeMongoDB.get_instance()
 
-    return AppMongoKeeper.get_instance().get_mongo().db
+    return AppMongoKeeper.get_instance().get_mongo()
