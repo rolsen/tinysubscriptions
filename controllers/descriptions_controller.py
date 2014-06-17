@@ -11,7 +11,8 @@ from .. import services
 blueprint = flask.Blueprint(
     'descriptions',
     __name__,
-    template_folder='../templates'
+    template_folder='../templates',
+    static_folder='../static'
 )
 
 @blueprint.route('/admin_lists', methods=['GET'])
