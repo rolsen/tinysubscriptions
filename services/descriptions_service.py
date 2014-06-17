@@ -32,7 +32,11 @@ def update_descriptions(new_descriptions):
     @type new_descriptions: iterable over list descriptions.
     """
     old_record = get_descriptions()
-    the_id = old_record.get('_id', None)
+    if old_record:
+        the_id = old_record.get('_id', None)
+    else:
+        the_id = None
+
     if the_id:
         new_descriptions['_id'] = the_id
     descriptions = dict(

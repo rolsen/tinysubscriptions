@@ -3,6 +3,8 @@
 @author: Rory Olsen (rolsen, Gleap LLC 2014)
 @license: GNU GPLv3
 """
+import functools
+
 import flask
 import json
 
@@ -15,7 +17,19 @@ blueprint = flask.Blueprint(
     static_folder='../static'
 )
 
+
+def require_admin(target_func):
+    @functools.wraps(target_func)
+    def inner_func(*args, **kwargs):
+        if services.config_layer.cur_user_is_admin():
+            return target_func(*args, **kwargs)
+        else:
+            flask.abort(403)
+    return inner_func
+
+
 @blueprint.route('/admin_lists', methods=['GET'])
+@require_admin
 def get_lists():
     """Get the subscription lists information."""
     descriptions = services.descriptions_service.get_descriptions()
@@ -53,6 +67,7 @@ def get_lists():
 
 
 @blueprint.route('/admin_lists', methods=['POST'])
+@require_admin
 def update_lists():
     """Update the subscription lists information.
 
