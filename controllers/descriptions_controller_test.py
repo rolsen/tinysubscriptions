@@ -9,7 +9,7 @@ import mox
 
 import tiny_subscriptions
 
-import services
+from .. import services
 
 TEST_SUBSCRIPTIONS = [
     'name0',

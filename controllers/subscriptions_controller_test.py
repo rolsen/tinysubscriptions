@@ -7,9 +7,9 @@ import copy
 import json
 import mox
 
-import tiny_subscriptions
+from .. import tiny_subscriptions
 
-import services
+from .. import services
 
 import subscriptions_controller
 

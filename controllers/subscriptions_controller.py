@@ -6,7 +6,7 @@
 import flask
 import json
 
-import services
+from .. import services
 
 POS_DIFF_KEY = services.util.POS_DIFF_KEY
 NEG_DIFF_KEY = services.util.NEG_DIFF_KEY
@@ -16,7 +16,7 @@ APP_TITLE = 'Subscription Center'
 blueprint = flask.Blueprint(
     'subscriptions',
     __name__,
-    template_folder='templates'
+    template_folder='../templates'
 )
 
 

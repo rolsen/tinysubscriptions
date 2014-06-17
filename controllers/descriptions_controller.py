@@ -6,12 +6,12 @@
 import flask
 import json
 
-import services
+from .. import services
 
 blueprint = flask.Blueprint(
     'descriptions',
     __name__,
-    template_folder='templates'
+    template_folder='../templates'
 )
 
 @blueprint.route('/admin_lists', methods=['GET'])
