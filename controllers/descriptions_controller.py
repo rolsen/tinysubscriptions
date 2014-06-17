@@ -35,13 +35,17 @@ def get_lists():
         })
 
     configuration = services.util.get_app_config()
+    temp_vals = services.config_layer.get_common_template_vals()
 
     return flask.render_template(
         'admin_chrome.html',
         base_url=configuration['BASE_URL'],
         app_title='Subscription Admin Center',
         base_static_url=configuration['BASE_STATIC_URL'],
-        lists=lists
+        lists=lists,
+        base_static_folder=configuration['BASE_STATIC_URL'],
+        parent_template=configuration.get('BASE_TEMPLATE', 'base.html'),
+        **temp_vals
     )
 
 

@@ -43,6 +43,9 @@ def get_lists(email):
     )
 
     configuration = services.util.get_app_config()
+    temp_vals = services.config_layer.get_common_template_vals()
+    print '0))-----((0'
+    print temp_vals
 
     return flask.render_template(
         'mailing_chrome.html',
@@ -50,7 +53,9 @@ def get_lists(email):
         app_title=APP_TITLE,
         email=email,
         lists=subscriptions,
-        base_static_folder=configuration['BASE_STATIC_URL']
+        base_static_folder=configuration['BASE_STATIC_URL'],
+        parent_template=configuration.get('BASE_TEMPLATE', 'base.html'),
+        **temp_vals
     )
 
 
