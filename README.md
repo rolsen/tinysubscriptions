@@ -85,3 +85,6 @@ The application configuration settings are maintained by Flask. The configuratio
  - SENDGRID_API_USERNAME: The username to use to authenticate with the transactional email service.
  - SENDGRID_API_KEY: The API key (password) to use to authenticate with the transactional email service.
  - FAKE_SENDGRID: Boolean indicating if the sendgrid service should be emulated.
+ - BASE_STATIC_URL: The root URL where the static content supporting this module can be found.
+
+These configuration values we be loaded from the 'tinysubscriptions' attribute if that attribute is defined.

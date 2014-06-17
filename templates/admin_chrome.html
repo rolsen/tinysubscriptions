@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block styles %}
-<link rel="stylesheet" type="text/css" href="/static/css/admin_chrome.css">
+<link rel="stylesheet" type="text/css" href="{{ base_static_folder }}/css/admin_chrome.css">
 {% endblock %}
 
 {% block scripts %}
-<script type="text/javascript" language="javascript" src="/static/js/description_controller.js"></script>
+<script type="text/javascript" language="javascript" src="{{ base_static_folder }}/js/description_controller.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -44,7 +44,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <button id="subscriptions-update-button" class="btn btn-default">Save</button>
-                <img id="ajax-loader" src="/static/image/ajax-loader.gif" alt="Working..." height="16" width="16">
+                <img id="ajax-loader" src="{{ base_static_folder }}/image/ajax-loader.gif" alt="Working..." height="16" width="16">
             </div>
         </div>
         <div class="row">

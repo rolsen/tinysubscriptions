@@ -3,8 +3,8 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{{ app_title }}</title>
-        <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="/static/css/base.css">
+        <link rel="stylesheet" type="text/css" href="{{ base_static_folder }}/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="{{ base_static_folder }}/css/base.css">
         {% block styles %}{% endblock %}
     </head>
     <body>
@@ -18,8 +18,8 @@
             {% block content %}{% endblock %}
         </div>
 
-        <script src="/static/js/lib/jquery-1.11.0.min.js"></script>
-        <script src="/static/js/lib/bootstrap.min.js"></script>
+        <script src="{{ base_static_folder }}/js/lib/jquery-1.11.0.min.js"></script>
+        <script src="{{ base_static_folder }}/js/lib/bootstrap.min.js"></script>
         {% block scripts %}{% endblock %}
 
     </body>

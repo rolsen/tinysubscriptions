@@ -33,10 +33,13 @@ def get_lists():
             'is_managed': description_item != None
         })
 
+    configuration = services.util.get_app_config()
+
     return flask.render_template(
         'admin_chrome.html',
-        base_url=services.util.get_app_config()['BASE_URL'],
+        base_url=configuration['BASE_URL'],
         app_title='Subscription Admin Center',
+        base_static_url=configuration['BASE_STATIC_URL'],
         lists=lists
     )
 
