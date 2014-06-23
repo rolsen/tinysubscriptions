@@ -8,13 +8,20 @@ import functools
 import flask
 import json
 
-from .. import services
+# Optimally, it would be nice to have "is_module" controlled by the configs, but
+# they may not be available when this module is imported.
+is_module = True
+
+try:
+    from tinysubscriptions import services
+except:
+    import services
+    is_module = False
 
 blueprint = flask.Blueprint(
     'descriptions',
     __name__,
-    template_folder='../templates',
-    static_folder='../static'
+    **services.util.get_template_folders(is_module)
 )
 
 
@@ -53,6 +60,7 @@ def get_lists():
 
     configuration = services.util.get_app_config()
     temp_vals = services.config_layer.get_common_template_vals()
+    parent_template = configuration.get('BASE_TEMPLATE', 'base.html')
 
     return flask.render_template(
         'admin_chrome.html',
@@ -61,7 +69,7 @@ def get_lists():
         base_static_url=configuration['BASE_STATIC_URL'],
         lists=lists,
         base_static_folder=configuration['BASE_STATIC_URL'],
-        parent_template=configuration.get('BASE_TEMPLATE', 'base.html'),
+        parent_template=parent_template,
         **temp_vals
     )
 

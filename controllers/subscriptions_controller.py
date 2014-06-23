@@ -6,7 +6,10 @@
 import flask
 import json
 
-from .. import services
+try:
+    from tinysubscriptions import services
+except:
+    import services
 
 POS_DIFF_KEY = services.util.POS_DIFF_KEY
 NEG_DIFF_KEY = services.util.NEG_DIFF_KEY

@@ -11,9 +11,10 @@ import flask
 from flask.ext.pymongo import PyMongo
 import json
 
+import config_cache
+
 import controllers
 import services
-
 
 def attach_blueprints(target_app):
     target_app.register_blueprint(
@@ -26,18 +27,28 @@ def attach_blueprints(target_app):
     )
 
 
-if __name__ == '__main__':
+def get_app():
+    return config_cache.get_config()['app']
+
+
+def initialize_standalone():
     # Initialize
     app = flask.Flask(__name__)
-    
+    config_cache.get_config()['app'] = app
+
     # Load configuration settings
     app.config.update(services.config_layer.get_config())
-    
+
     # Create singleton for access
     services.util.AppConfigKeeper.create_instance(app.config)
 
     attach_blueprints(app)
 
+
+if __name__ == '__main__':
+    initialize_standalone()
+
+    app = get_app()
     app.config['DEBUG'] = True
 
     if not app.config['FAKE_MONGO']:

@@ -1,0 +1,15 @@
+{
+    "REDIS_HOST": "localhost",
+    "REDIS_PORT": 6379,
+    "REDIS_DB": 0,
+    "REDIS_PASSWORD": null,
+    "REDIS_EXPIRATION": 108000,
+    "FAKE_MONGO": false,
+    "BASE_URL": "/mailing",
+    "SENDGRID_API_USERNAME": "Example Sendgrid Username",
+    "SENDGRID_API_KEY": "Example Sendgrid Key",
+    "FAKE_SENDGRID": true,
+    "BASE_STATIC_URL": "/mailing/static",
+    "BASE_TEMPLATE": "base.html",
+    "MONGO_URI": "mongodb://localhost"
+}

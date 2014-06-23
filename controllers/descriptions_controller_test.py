@@ -7,9 +7,12 @@ import copy
 import json
 import mox
 
-import tiny_subscriptions
-
-from .. import services
+try:
+    from tinysubscriptions import tiny_subscriptions
+    from tinysubscriptions import services
+except:
+    import tiny_subscriptions
+    import services
 
 TEST_SUBSCRIPTIONS = [
     'name0',
@@ -29,8 +32,9 @@ class DescriptionsControllerTests(mox.MoxTestBase):
 
     def setUp(self):
         mox.MoxTestBase.setUp(self)
-        tiny_subscriptions.app.debug = True
-        self.app = tiny_subscriptions.app.test_client()
+        app = tiny_subscriptions.get_app()
+        app.debug = True
+        self.app = app.test_client()
 
     def test_get_lists(self):
         self.mox.StubOutWithMock(

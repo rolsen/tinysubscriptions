@@ -7,9 +7,12 @@ import copy
 import json
 import mox
 
-from .. import tiny_subscriptions
-
-from .. import services
+try:
+    from tinysubscriptions import tiny_subscriptions
+    from tinysubscriptions import services
+except:
+    import tiny_subscriptions
+    import services
 
 import subscriptions_controller
 
@@ -57,8 +60,9 @@ class SubscriptionsControllerTests(mox.MoxTestBase):
 
     def setUp(self):
         mox.MoxTestBase.setUp(self)
-        tiny_subscriptions.app.debug = True
-        self.app = tiny_subscriptions.app.test_client()
+        app = tiny_subscriptions.get_app()
+        app.debug = True
+        self.app = app.test_client()
 
     def test_manage_lists_get(self):
         self.mox.StubOutWithMock(
@@ -95,6 +99,11 @@ class SubscriptionsControllerTests(mox.MoxTestBase):
         self.assertTrue('description2' in result.data)
 
     def test_manage_lists_post(self):
+
+        class FakeResponse:
+            status_code = 200
+            text = 'test response'
+
         self.mox.StubOutWithMock(
             services.subscriptions_service,
             'get_user_subscriptions'
@@ -109,8 +118,14 @@ class SubscriptionsControllerTests(mox.MoxTestBase):
             TEST_SUBSCRIPTIONS,
             TEST_NEW_LISTS
         ).AndReturn(TEST_DIFF)
-        services.subscriptions_service.subscribe(TEST_EMAIL, TEST_NEW_SUBSCR)
-        services.subscriptions_service.unsubscribe(TEST_EMAIL, TEST_DEL_SUBSCR)
+        services.subscriptions_service.subscribe(
+            TEST_EMAIL,
+            TEST_NEW_SUBSCR
+        ).AndReturn(FakeResponse())
+        services.subscriptions_service.unsubscribe(
+            TEST_EMAIL,
+            TEST_DEL_SUBSCR
+        ).AndReturn(FakeResponse())
 
         self.mox.ReplayAll()
 

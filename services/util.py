@@ -219,3 +219,18 @@ def redis_cached(cache_miss_func):
             return cache_miss_func(*args, **kwargs)
 
     return inner_guarded
+
+
+def get_template_folders(is_module):
+    template_folder_temp='../templates'
+    static_folder_temp='../static'
+
+    if not is_module:
+        template_folder_temp='templates',
+        static_folder_temp='static'
+
+    return {
+        'template_folder': template_folder_temp,
+        'static_folder': static_folder_temp
+    }
+
