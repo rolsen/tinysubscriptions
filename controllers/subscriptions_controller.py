@@ -54,7 +54,10 @@ def get_lists(email):
 
     configuration = services.util.get_app_config()
     temp_vals = services.config_layer.get_common_template_vals()
-    base_template = config_layer.get_config().get('BASE_TEMPLATE', 'base.html')
+    base_template = config_layer.get_config().get(
+        'BASE_TEMPLATE',
+        'tinysubscriptions_base.html'
+    )
 
     return flask.render_template(
         'mailing_chrome.html',

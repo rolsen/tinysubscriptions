@@ -10,6 +10,6 @@
     "SENDGRID_API_KEY": "Example Sendgrid Key",
     "FAKE_SENDGRID": true,
     "BASE_STATIC_URL": "/mailing/static",
-    "BASE_TEMPLATE": "base.html",
+    "BASE_TEMPLATE": "tinysubscriptions_base.html",
     "MONGO_URI": "mongodb://localhost"
 }
