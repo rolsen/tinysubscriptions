@@ -61,7 +61,18 @@ class AppMongoKeeper:
     @classmethod
     def get_instance(cls):
         if cls.__instance == None:
-            raise ValueError('AppMongoKeeper not initalized')
+            try:
+                from tinysubscriptions import tiny_subscriptions
+            except:
+                import tiny_subscriptions
+
+            app = tiny_subscriptions.get_app()
+
+            if app.config['FAKE_MONGO']:
+                cls.create_instance(FakeMongoDB())
+            else:
+                cls.create_instance(PyMongo(app))
+
         return cls.__instance
 
     @classmethod
@@ -118,4 +129,4 @@ def get_db():
     if util.get_app_config()['FAKE_MONGO']:
         return FakeMongoDB.get_instance()
 
-    return AppMongoKeeper.get_instance().get_mongo()
+    return AppMongoKeeper.get_instance().get_mongo().db

@@ -14,9 +14,12 @@ is_module = True
 
 try:
     from tinysubscriptions import services
+    from tinysubscriptions.services import config_layer
 except:
     import services
+    from services import config_layer
     is_module = False
+
 
 blueprint = flask.Blueprint(
     'descriptions',
@@ -60,7 +63,7 @@ def get_lists():
 
     configuration = services.util.get_app_config()
     temp_vals = services.config_layer.get_common_template_vals()
-    parent_template = configuration.get('BASE_TEMPLATE', 'base.html')
+    parent_template = config_layer.get_config().get('BASE_TEMPLATE', 'base.html')
 
     return flask.render_template(
         'admin_chrome.html',

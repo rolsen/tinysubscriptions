@@ -51,8 +51,4 @@ if __name__ == '__main__':
     app = get_app()
     app.config['DEBUG'] = True
 
-    if not app.config['FAKE_MONGO']:
-        mongo = PyMongo(app).db
-        services.descriptions_service.AppMongoKeeper.create_instance(mongo)
-
     app.run()

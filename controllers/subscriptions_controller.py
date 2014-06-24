@@ -6,10 +6,17 @@
 import flask
 import json
 
+# Optimally, it would be nice to have "is_module" controlled by the configs, but
+# they may not be available when this module is imported.
+is_module = True
+
 try:
     from tinysubscriptions import services
+    from tinysubscriptions.services import config_layer
 except:
     import services
+    from services import config_layer
+    is_module = False
 
 POS_DIFF_KEY = services.util.POS_DIFF_KEY
 NEG_DIFF_KEY = services.util.NEG_DIFF_KEY
@@ -19,7 +26,7 @@ APP_TITLE = 'Subscription Center'
 blueprint = flask.Blueprint(
     'subscriptions',
     __name__,
-    template_folder='../templates'
+    **services.util.get_template_folders(is_module)
 )
 
 
@@ -47,6 +54,7 @@ def get_lists(email):
 
     configuration = services.util.get_app_config()
     temp_vals = services.config_layer.get_common_template_vals()
+    base_template = config_layer.get_config().get('BASE_TEMPLATE', 'base.html')
 
     return flask.render_template(
         'mailing_chrome.html',
@@ -55,7 +63,7 @@ def get_lists(email):
         email=email,
         lists=subscriptions,
         base_static_folder=configuration['BASE_STATIC_URL'],
-        parent_template=configuration.get('BASE_TEMPLATE', 'base.html'),
+        parent_template=base_template,
         **temp_vals
     )
 
