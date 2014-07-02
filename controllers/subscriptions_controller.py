@@ -14,7 +14,7 @@ try:
     from tinysubscriptions import services
     from tinysubscriptions.services import config_layer
 except:
-    import services
+    from .. import services
     from services import config_layer
     is_module = False
 
