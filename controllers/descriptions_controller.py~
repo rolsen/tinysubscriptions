@@ -20,6 +20,7 @@ except:
     from services import config_layer
     is_module = False
 
+
 blueprint = flask.Blueprint(
     'descriptions',
     __name__,
